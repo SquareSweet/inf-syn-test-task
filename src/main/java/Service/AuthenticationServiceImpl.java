@@ -11,20 +11,16 @@ import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import model.User;
 import org.mindrot.jbcrypt.BCrypt;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import utils.JwtTokenUtils;
 
 @Slf4j
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserDao userDao;
     private final JwtTokenUtils tokenUtils;
-    private final Logger fileLog;
 
     public AuthenticationServiceImpl(UserDao userDao) {
         this.userDao = userDao;
         tokenUtils = new JwtTokenUtils();
-        fileLog = LoggerFactory.getLogger("actions");
     }
 
     @Override
@@ -35,7 +31,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
         String hashedPassword = BCrypt.hashpw(regRequest.getPassword(), BCrypt.gensalt());
         User user = userDao.create(new User(null, regRequest.getLogin(), hashedPassword));
-        fileLog.info("Created user id: {}, username: {}", user.getId(), user.getUsername());
+        log.debug("Created user id: {}, username: {}", user.getId(), user.getUsername());
         String accessToken = tokenUtils.generateAccessToken(user);
         String refreshToken = tokenUtils.generateRefreshToken(user);
         return new RegistrationResponse(accessToken, refreshToken);
@@ -51,7 +47,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 () -> new UserNotFoundException("Username " + " not found")
         );
         BCrypt.checkpw(authRequest.getPassword(), user.getPassword());
-        fileLog.info("User id: {}, username: {} has logged in", user.getId(), user.getUsername());
+        log.debug("User id: {}, username: {} has logged in", user.getId(), user.getUsername());
         String accessToken = tokenUtils.generateAccessToken(user);
         String refreshToken = tokenUtils.generateRefreshToken(user);
         return new AuthenticationResponse(accessToken, refreshToken);
