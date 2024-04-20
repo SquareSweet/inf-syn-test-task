@@ -1,14 +1,14 @@
-package model;
+package dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @AllArgsConstructor
-public class Account {
-    private Long id;
-    private Long userId;
-    private Long balance;
+public class TransferResponse {
+    private BigDecimal balance;
 }
