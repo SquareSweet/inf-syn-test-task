@@ -5,6 +5,8 @@ import dto.AuthenticationRequest;
 import dto.AuthenticationResponse;
 import dto.RegistrationRequest;
 import dto.RegistrationResponse;
+import exception.InvalidTokenException;
+import exception.UserNotFoundException;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import model.User;
@@ -45,7 +47,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 authRequest.getPassword() == null || authRequest.getPassword().isEmpty()){
             throw new IllegalArgumentException("Login and password should not be empty");
         }
-        User user = userDao.getByUsername(authRequest.getLogin()).orElseThrow();
+        User user = userDao.getByUsername(authRequest.getLogin()).orElseThrow(
+                () -> new UserNotFoundException("Username " + " not found")
+        );
         BCrypt.checkpw(authRequest.getPassword(), user.getPassword());
         fileLog.info("User id: {}, username: {} has logged in", user.getId(), user.getUsername());
         String accessToken = tokenUtils.generateAccessToken(user);
@@ -62,7 +66,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             String accessToken = tokenUtils.generateAccessToken(user);
             return new AuthenticationResponse(accessToken, null);
         }
-        return new AuthenticationResponse(null, null);
+        throw new InvalidTokenException("Invalid token");
     }
 
     @Override
@@ -75,7 +79,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             String newRefreshToken = tokenUtils.generateRefreshToken(user);
             return new AuthenticationResponse(accessToken, newRefreshToken);
         }
-        throw new RuntimeException("Invalid token");
+        throw new InvalidTokenException("Invalid token");
     }
 
     @Override
