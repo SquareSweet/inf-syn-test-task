@@ -3,6 +3,8 @@ package Service;
 import dao.UserDao;
 import dto.AuthenticationRequest;
 import dto.AuthenticationResponse;
+import dto.RegistrationRequest;
+import dto.RegistrationResponse;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import model.User;
@@ -24,17 +26,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public AuthenticationResponse signUp(AuthenticationRequest authRequest) {
-        if (authRequest.getLogin() == null || authRequest.getLogin().isEmpty() ||
-                authRequest.getPassword() == null || authRequest.getPassword().isEmpty()) {
+    public RegistrationResponse signUp(RegistrationRequest regRequest) {
+        if (regRequest.getLogin() == null || regRequest.getLogin().isEmpty() ||
+                regRequest.getPassword() == null || regRequest.getPassword().isEmpty()) {
             throw new IllegalArgumentException("Login and password should not be empty");
         }
-        String hashedPassword = BCrypt.hashpw(authRequest.getPassword(), BCrypt.gensalt());
-        User user = userDao.create(new User(null, authRequest.getLogin(), hashedPassword));
+        String hashedPassword = BCrypt.hashpw(regRequest.getPassword(), BCrypt.gensalt());
+        User user = userDao.create(new User(null, regRequest.getLogin(), hashedPassword));
         fileLog.info("Created user id: {}, username: {}", user.getId(), user.getUsername());
         String accessToken = tokenUtils.generateAccessToken(user);
         String refreshToken = tokenUtils.generateRefreshToken(user);
-        return new AuthenticationResponse(accessToken, refreshToken);
+        return new RegistrationResponse(accessToken, refreshToken);
     }
 
     @Override
