@@ -5,6 +5,7 @@ import dto.AuthenticationRequest;
 import dto.AuthenticationResponse;
 import dto.RegistrationRequest;
 import dto.RegistrationResponse;
+import exception.AuthenticationException;
 import exception.InvalidTokenException;
 import exception.UserNotFoundException;
 import io.jsonwebtoken.Claims;
@@ -46,7 +47,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userDao.getByUsername(authRequest.getLogin()).orElseThrow(
                 () -> new UserNotFoundException("Username " + " not found")
         );
-        BCrypt.checkpw(authRequest.getPassword(), user.getPassword());
+        if (!BCrypt.checkpw(authRequest.getPassword(), user.getPassword())) {
+            throw new AuthenticationException("Wrong password");
+        }
         log.debug("User id: {}, username: {} has logged in", user.getId(), user.getUsername());
         String accessToken = tokenUtils.generateAccessToken(user);
         String refreshToken = tokenUtils.generateRefreshToken(user);
