@@ -75,15 +75,15 @@ public class JwtTokenUtils {
                     .getPayload();
             return true;
         } catch (ExpiredJwtException e) {
-            log.error("Token expired", e);
+            log.error("Token expired: {}", e.getMessage());
         } catch (UnsupportedJwtException e) {
-            log.error("Unsupported jwt", e);
+            log.error("Unsupported jwt: {}", e.getMessage());
         } catch (MalformedJwtException e) {
-            log.error("Malformed jwt", e);
+            log.error("Malformed jwt: {}", e.getMessage());
         } catch (SecurityException e) {
-            log.error("Invalid signature", e);
+            log.error("Invalid signature: {}", e.getMessage());
         } catch (Exception e) {
-            log.error("Invalid token", e);
+            log.error("Invalid token: {}", e.getMessage());
         }
         return false;
     }

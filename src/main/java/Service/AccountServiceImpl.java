@@ -51,6 +51,6 @@ public class AccountServiceImpl implements AccountService {
         log.debug("Transaction of {} sent from user {} to user {}",
                 amountLong, senderUsername, transferRequest.getReceiverUsername());
 
-        return new TransferResponse(BigDecimal.valueOf(senderAccount.getBalance() / 100.0));
+        return new TransferResponse(BigDecimal.valueOf(senderAccount.getBalance() / 100.0).subtract(transferRequest.getAmount()));
     }
 }
