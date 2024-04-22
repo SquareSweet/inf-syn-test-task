@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-users
+      author: SquareSweet
+      changes:
+        - createTable:
+            tableName: accounts
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_accounts_users
+                    references: users(id)
+              - column:
+                  name: balance
+                  type: bigint
+                  defaultValue: 0
+                  constraints:
+                    nullable: false
