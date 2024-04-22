@@ -18,13 +18,17 @@ public class Server {
     }
 
     public void start() {
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
+        try (ServerSocket serverSocket = new ServerSocket(port, 50)) {
+
             log.info("Server started on port {}", port);
             ExecutorService executorService = Executors.newCachedThreadPool();
 
             while (!serverSocket.isClosed()) {
                 Socket clientSocket = serverSocket.accept();
-                executorService.execute(new Thread(() -> controller.handleRequest(clientSocket)));
+                if (clientSocket != null) {
+                    log.debug("Client connected");
+                    executorService.submit(() -> controller.handleRequest(clientSocket));
+                }
             }
         } catch (IOException e) {
             log.error(e.getMessage());

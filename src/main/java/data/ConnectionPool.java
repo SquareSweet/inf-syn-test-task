@@ -27,7 +27,7 @@ public class ConnectionPool {
         config.setJdbcUrl(dbProperties.getProperty("datasource.url"));
         config.setUsername(dbProperties.getProperty("datasource.username"));
         config.setPassword(dbProperties.getProperty("datasource.password"));
-        config.setMaximumPoolSize(10);
+        config.setMaximumPoolSize(50);
         dataSource = new HikariDataSource(config);
     }
 
@@ -38,10 +38,5 @@ public class ConnectionPool {
             log.error("Error occurred while issuing connection from pool: " + e.getMessage());
             throw new RuntimeException(e);
         }
-    }
-
-    public void close() {
-        dataSource.close();
-        log.debug("Connection pool closed");
     }
 }
