@@ -58,7 +58,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponse createAccessToken(String refreshToken) {
-        //TODO: проверка инвалидации
         if (tokenUtils.validateRefreshToken(refreshToken)) {
             Claims claims = tokenUtils.getRefreshClaims(refreshToken);
             User user = userDao.getByUsername(claims.getSubject()).orElseThrow();
@@ -70,7 +69,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponse createRefreshToken(String refreshToken) {
-        //TODO: проверка инвалидации
         if (tokenUtils.validateRefreshToken(refreshToken)) {
             final Claims claims = tokenUtils.getRefreshClaims(refreshToken);
             User user = userDao.getByUsername(claims.getSubject()).orElseThrow();
@@ -79,10 +77,5 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return new AuthenticationResponse(accessToken, newRefreshToken);
         }
         throw new InvalidTokenException("Invalid token");
-    }
-
-    @Override
-    public void invalidateToken(String refreshToken) {
-        //TODO: инваоидация
     }
 }

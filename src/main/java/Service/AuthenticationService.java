@@ -10,5 +10,4 @@ public interface AuthenticationService {
     AuthenticationResponse signIn(AuthenticationRequest authRequest);
     AuthenticationResponse createAccessToken(String refreshToken);
     AuthenticationResponse createRefreshToken(String refreshToken);
-    void invalidateToken(String refreshToken);
 }
