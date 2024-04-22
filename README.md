@@ -31,6 +31,7 @@ Creates new user and signs them in. Response will contain JWT access and refresh
     "refreshToken": "token string"
 }
 ```
+<br>
 
 ### POST /signin
 ```json
@@ -47,6 +48,7 @@ Signs user in. Response will contain JWT access and refresh tokens:
     "refreshToken": "token string"
 }
 ```
+<br>
 
 ### POST /token
 ```json
@@ -62,8 +64,9 @@ Creates new access token for user. Response will contain JWT access and refresh 
     "refreshToken": null
 }
 ```
+<br>
 
-### POST /token
+### POST /refresh
 ```json
 {
     "refreshToken": "token string"
@@ -77,6 +80,7 @@ Creates new access and refresh tokens for user. Response will contain JWT access
     "refreshToken": "token string"
 }
 ```
+<br>
 
 ### GET /money
 Requires authorization.
@@ -86,6 +90,7 @@ Requests user's current balance. Response will contain balance fixed point value
     "balance": 0.0
 }
 ```
+<br>
 
 ### POST /money
 ```json
